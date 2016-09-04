@@ -14,6 +14,8 @@ public class PlayerControll : NetworkBehaviour
     public GameObject Flashlight;
     [SyncVar]
     private float SleepOff = 5f;
+    RaycastHit hit;
+
 
     void Start()
     {
@@ -28,6 +30,11 @@ public class PlayerControll : NetworkBehaviour
 
     void Update()
     {
+        
+        
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 10);
+        Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.red);
+
         counter = GameController.counter;
         //print(transform.rotation.eulerAngles);
 

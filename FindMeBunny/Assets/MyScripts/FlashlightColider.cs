@@ -4,19 +4,43 @@ using UnityEngine.Networking;
 
 public class FlashlightColider : NetworkBehaviour {
 
-    Ray landingRay = new Ray(transform.position, Vector3.forward);
+    Ray landingRay;
+    RaycastHit hit;
     public float deployment;
-    RaycastHit hit; 
 
-    void OnTriggerEnter(Collider other)
+
+    void update()
     {
-        //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
+        
+        //landingRay = new Ray(transform.position, Vector3.forward);
+        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * deployment);
+       // Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.red);
+    }
+
+void OnTriggerEnter(Collider other)
+    {
+
+        landingRay = new Ray(transform.position, transform.TransformDirection(Vector3.forward));
+        if (Physics.Raycast(landingRay, out hit, deployment))
+        {
+            Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.red);
+        }
+            //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
         if (other.gameObject.CompareTag("Player"))
         {
-            Physics.Raycast(landingRay, out hit, deployment);
+            if (Physics.Raycast(landingRay, out hit, deployment))
+            {
+                if(hit.collider.tag == "Player" && hit.collider.tag != "wall")
+                {   
+                    other.gameObject.GetComponent<PlayerControll>().isLooking = true;
+                    Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.green);
+                }
+            }
+            //Debug.Log("  " + hit.collider.gameObject.name);
             //other.gameObject.transform.GetChild(0).gameObject.SetActive(true);
-            other.gameObject.GetComponent<PlayerControll>().isLooking = true;
-            Debug.DrawLine(ray.origin, hit.point);
+            //sother.gameObject.GetComponent<PlayerControll>().isLooking = true;
+
+            // Debug.DrawRay(transform.position, Vector3.forward * deployment);
         }
         //print("I see object");
 
