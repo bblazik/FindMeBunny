@@ -1,0 +1,14 @@
+ManifestFileVersion: 0
+CRC: 0
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 812c5ccc0a7e6e9380a5b8043ea2fd02
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 31d6cfe0d16ae931b73c59d7e0c089c0
+HashAppended: 0
+ClassTypes: []
+Assets:
+- Assets/AssetBundleSample/SampleAssets/Tanks/Variants/Language/English/Canvas.prefab
+Dependencies: []
