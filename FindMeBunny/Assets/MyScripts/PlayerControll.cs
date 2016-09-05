@@ -30,11 +30,6 @@ public class PlayerControll : NetworkBehaviour
 
     void Update()
     {
-        
-        
-        Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 10);
-        Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.red);
-
         counter = GameController.counter;
         //print(transform.rotation.eulerAngles);
 
@@ -85,8 +80,8 @@ public class PlayerControll : NetworkBehaviour
         if (isLooking && counter < 0)
         {
             c.fieldOfView = 60;
-            
             Flashlight.SetActive(true);
+            gameObject.layer = LayerMask.NameToLayer("Ignore Raycast");
         }
         else {
             Flashlight.SetActive(false);

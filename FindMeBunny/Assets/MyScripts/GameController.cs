@@ -29,7 +29,10 @@ public class GameController : NetworkBehaviour {
         PlayersList = GameObject.FindGameObjectsWithTag("Player");
 
         if (PlayersList.Length > 0)
+        {
+            PlayersList[0].layer = LayerMask.NameToLayer("Ignore Raycast");
             PlayersList[0].GetComponent<PlayerControll>().isLooking = true;
+        }
 
        
         Debug.Log("PlayersList.Length: " + PlayersList.Length);
