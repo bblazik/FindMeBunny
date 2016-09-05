@@ -19,7 +19,7 @@ void OnTriggerEnter(Collider other)
 
         landingRay = new Ray(transform.position, transform.TransformDirection(Vector3.forward));
 
-
+        debug();
         
 
         if (other.gameObject.CompareTag("Player"))
