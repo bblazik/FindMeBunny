@@ -8,14 +8,11 @@ public class GameController : NetworkBehaviour {
     public static GameObject[] PlayersList;
     public static bool SwitchOffLight = false;
 
-
-        
-
-
     // Use this for initialization
     void Start ()
     {
-        
+        SwitchOffLight = false;
+
         SetLookingPlayer();
     }
     //[Server]
@@ -33,8 +30,6 @@ public class GameController : NetworkBehaviour {
             PlayersList[0].layer = LayerMask.NameToLayer("Ignore Raycast");
             PlayersList[0].GetComponent<PlayerControll>().isLooking = true;
         }
-
-       
         Debug.Log("PlayersList.Length: " + PlayersList.Length);
     }
 
@@ -44,7 +39,6 @@ public class GameController : NetworkBehaviour {
         PlayersList = GameObject.FindGameObjectsWithTag("Player");
         if (PlayersList.Length > 0)
         {      
-
             foreach (GameObject p in PlayersList)
             {
                 if (p.GetComponent<PlayerControll>().isLooking == false)

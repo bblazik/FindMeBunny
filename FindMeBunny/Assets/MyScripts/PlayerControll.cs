@@ -12,13 +12,16 @@ public class PlayerControll : NetworkBehaviour
     public Camera c;
     [SyncVar]
     public GameObject Flashlight;
-    [SyncVar]
     private float SleepOff = 5f;
-    RaycastHit hit;
+    private bool Called = false;
 
 
     void Start()
     {
+        //Initialize
+        isLooking = false;
+
+
         // IF I'M THE PLAYER, STOP HERE (DON'T TURN MY OWN CAMERA OFF)
         if (isLocalPlayer) return;
 
@@ -54,10 +57,10 @@ public class PlayerControll : NetworkBehaviour
             DisplayText.text = "All players were catched";
 
             //Initialize
-            ReturnToLobby();
+            CmdReturnToLobby();
         }
     }
-
+     
     void Movement() {
         if (!isLocalPlayer)
         {
@@ -89,19 +92,24 @@ public class PlayerControll : NetworkBehaviour
         }
     }
 
-    void ReturnToLobby() {
-
-        if (SleepOff < 0)
+    //[ClientRpc]
+    [Command]
+    void CmdReturnToLobby()
+    {
+        if (Called == false)
         {
-            GameController.counter = 10;
-            GameController.SwitchOffLight = false;
-
-            GameObject.FindGameObjectWithTag("Lobby").GetComponent<Prototype.NetworkLobby.LobbyManager>().SendReturnToLobby();
-        }
-        else
-        {
-            DisplayText.text = "Returning in: " + SleepOff;
-            SleepOff -= Time.deltaTime;
+            if (SleepOff < 0)
+            {
+                GameController.counter = 10;
+                GameController.SwitchOffLight = false;
+                GameObject.FindGameObjectWithTag("Lobby").GetComponent<Prototype.NetworkLobby.LobbyManager>().SendReturnToLobby();
+                Called = true;
+            }
+            else
+            {
+                DisplayText.text = "Returning in: " + SleepOff;
+                SleepOff -= Time.deltaTime;
+            }
         }
     }
 }

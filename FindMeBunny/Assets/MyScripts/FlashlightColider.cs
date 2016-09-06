@@ -11,15 +11,28 @@ public class FlashlightColider : NetworkBehaviour {
 
     void update()
     {
-        
-    }
-
-void OnTriggerEnter(Collider other)
-    {
-
+        /*
         landingRay = new Ray(transform.position, transform.TransformDirection(Vector3.forward));
 
         debug();
+
+            if (Physics.Raycast(landingRay, out hit, deployment))
+            {
+                if (hit.collider.tag == "Player")
+                {
+                    hit.collider.gameObject.GetComponent<PlayerControll>().isLooking = true;
+                    Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.green);
+                }
+            }
+        */
+    }
+
+void OnTriggerStay(Collider other)
+    {
+       
+        landingRay = new Ray(transform.position, transform.TransformDirection(Vector3.forward));
+
+        //debug();
         
 
         if (other.gameObject.CompareTag("Player"))
@@ -29,10 +42,11 @@ void OnTriggerEnter(Collider other)
                 if (hit.collider.tag == "Player" )
                 {   
                     other.gameObject.GetComponent<PlayerControll>().isLooking = true;
-                    Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.green);
+                    //Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.green);
                 }
             }
         }
+        
     }
 
     void debug()
@@ -40,7 +54,6 @@ void OnTriggerEnter(Collider other)
         if (Physics.Raycast(landingRay, out hit, deployment))
         {
             Debug.DrawLine(hit.point, hit.point + Vector3.up * 5, Color.red);
-            Debug.Log("WTF IS THAT ");
             Debug.Log("  " + hit.collider.gameObject.name);
         }
     }
