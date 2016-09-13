@@ -11,6 +11,7 @@ public class GameController : NetworkBehaviour {
     // Use this for initialization
     void Start ()
     {
+        counter = 10;
         SwitchOffLight = false;
 
         SetLookingPlayer();
@@ -18,7 +19,7 @@ public class GameController : NetworkBehaviour {
     //[Server]
     void Update()
     {
-        SwitchOffLights();
+        RpcSwitchOffLights();
         //print(PlayersList.Length);
     }
     void SetLookingPlayer()
@@ -48,8 +49,9 @@ public class GameController : NetworkBehaviour {
         
         return true;
     }
-
-    void SwitchOffLights()
+    //Dodanie RPC skutkuje tym ze jest mniejsza roznica w counterach na klientach
+    [RPC]
+    void RpcSwitchOffLights()
     {
         if (counter > 0)
         {

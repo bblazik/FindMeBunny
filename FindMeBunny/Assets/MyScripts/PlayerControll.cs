@@ -6,12 +6,14 @@ using System.Collections;
 public class PlayerControll : NetworkBehaviour
 {
     [SyncVar]
-    public bool isLooking;
+    public bool isLooking; 
+    [SyncVar]
     private float counter;
     public Text DisplayText;
     public Camera c;
     [SyncVar]
     public GameObject Flashlight;
+    [SyncVar]
     private float SleepOff = 5f;
     private bool Called = false;
 
@@ -20,11 +22,8 @@ public class PlayerControll : NetworkBehaviour
     {
         //Initialize
         isLooking = false;
-
-
         // IF I'M THE PLAYER, STOP HERE (DON'T TURN MY OWN CAMERA OFF)
         if (isLocalPlayer) return;
-
         // DISABLE CAMERA AND CONTROLS HERE (BECAUSE THEY ARE NOT ME)
         c.enabled = false;
         //GetComponent<PlayerMovement>().enabled = false;
@@ -34,20 +33,17 @@ public class PlayerControll : NetworkBehaviour
     void Update()
     {
         counter = GameController.counter;
-        //print(transform.rotation.eulerAngles);
 
         Movement();
         CheckIfLooking();
         DisplayCounter();
     }
-
+    
     void DisplayCounter()
     {
         if (counter > 0)
         {
             DisplayText.text = "time to hide: " + counter.ToString();
-
-            
         }
         else DisplayText.enabled = false;
 
@@ -57,7 +53,7 @@ public class PlayerControll : NetworkBehaviour
             DisplayText.text = "All players were catched";
 
             //Initialize
-            CmdReturnToLobby();
+            ReturnToLobby();
         }
     }
      
@@ -92,16 +88,16 @@ public class PlayerControll : NetworkBehaviour
         }
     }
 
-    //[ClientRpc]
-    [Command]
-    void CmdReturnToLobby()
+    
+    void ReturnToLobby()
     {
         if (Called == false)
         {
             if (SleepOff < 0)
             {
-                GameController.counter = 10;
-                GameController.SwitchOffLight = false;
+                //GameController.counter = 10;
+                //GameController.SwitchOffLight = false;
+                //RpcReturnToLobby();
                 GameObject.FindGameObjectWithTag("Lobby").GetComponent<Prototype.NetworkLobby.LobbyManager>().SendReturnToLobby();
                 Called = true;
             }
@@ -110,6 +106,7 @@ public class PlayerControll : NetworkBehaviour
                 DisplayText.text = "Returning in: " + SleepOff;
                 SleepOff -= Time.deltaTime;
             }
+            
         }
     }
 }

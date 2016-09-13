@@ -347,7 +347,7 @@ namespace Prototype.NetworkLobby
 			}
 
 			if(allready)
-				StartCoroutine(ServerCountdownCoroutine());
+				StartCoroutine(ServerCountdownCoroutine()); 
         }
 
         public IEnumerator ServerCountdownCoroutine()
