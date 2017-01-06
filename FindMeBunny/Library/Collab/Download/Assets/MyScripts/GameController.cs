@@ -2,7 +2,6 @@
 using System.Collections;
 using UnityEngine.Networking;
 using UnityEngine.UI;
-using System.Linq;
 
 
 public class GameController : NetworkBehaviour {
@@ -17,40 +16,29 @@ public class GameController : NetworkBehaviour {
         Called = false;
         counter = 10;
         SwitchOffLight = false;
+
+        SetLookingPlayer();
     }
-    
+    //[Server]
     void Update()
     {
         RpcSwitchOffLights();
-        RpcDisplayCounter();
-        RpcSetLookingPlayer(GameObject.FindGameObjectsWithTag("Player").OrderBy(go => go.GetComponent<NetworkIdentity>().netId.Value).ToArray());
         //print(PlayersList.Length);
     }
-    [Command] 
-    void CmdSetLookingPlayer()
+    void SetLookingPlayer()
     {
-        PlayersList = GameObject.FindGameObjectsWithTag("Player").OrderBy(go => go.GetComponent<NetworkIdentity>().netId).ToArray();
-        RpcSetLookingPlayer(PlayersList);
-        //Debug.Log("Server: " + PlayersList[0].GetComponent<NetworkIdentity>().netId + " : " + PlayersList[1].GetComponent<NetworkIdentity>().netId);
-    }
-
-    //[ClientRpc]
-    void RpcSetLookingPlayer(GameObject [] List)
-    {
-        PlayersList = List;
-        foreach(GameObject p in PlayersList) {
-            Debug.Log("UnetId: " +p.GetComponent<NetworkIdentity>().netId);
-        }
+        PlayersList = GameObject.FindGameObjectsWithTag("Player");
 
         if (PlayersList.Length > 0)
         {
             PlayersList[0].layer = LayerMask.NameToLayer("Ignore Raycast");
             PlayersList[0].GetComponent<PlayerControll>().isLooking = true;
         }
+        Debug.Log("PlayersList.Length: " + PlayersList.Length);
     }
 
     
-    public  bool AllPlayersWereCatched()
+    public static bool AllPlayersWereCatched()
     {
         PlayersList = GameObject.FindGameObjectsWithTag("Player");
         if (PlayersList.Length > 0)
@@ -79,18 +67,16 @@ public class GameController : NetworkBehaviour {
             SwitchOffLight = true;
         }
     }
-    [Command]
-    void CmdReturnToLobby()
-    {
-        RpcReturnToLobby();
-    }
 
     [RPC]
     public void RpcReturnToLobby()
     {
         StartCoroutine(ServerCountdownCoroutine());
-        if (Called == false && isServer)
+        if (Called == false)
         {
+            //GameController.counter = 10;
+            //GameController.SwitchOffLight = false;
+            //RpcReturnToLobby();
             GameObject.FindGameObjectWithTag("Lobby").GetComponent<Prototype.NetworkLobby.LobbyManager>().SendReturnToLobby();
             Called = true;
         }
@@ -123,31 +109,6 @@ public class GameController : NetworkBehaviour {
         }
         
     }
+
     
-    [RPC]
-    void RpcDisplayCounter()
-    {
-        
-        if (AllPlayersWereCatched() && counter < 0)
-        {
-            CmdReturnToLobby();
-        }
-
-        if (PlayersList.Length != 0 && Called == false)
-            foreach (GameObject p in PlayersList)
-            {
-                if (counter > 0)
-                {
-                    p.GetComponent<PlayerControll>().DisplayText.enabled = true;
-                    p.GetComponent<PlayerControll>().DisplayText.text = "time to hide: " + counter.ToString();
-                }
-                else p.GetComponent<PlayerControll>().DisplayText.enabled = false;
-
-            }
-    }//EndDisplayCounter
-
-    private static int SortByName(GameObject o1, GameObject o2)
-    {
-        return o1.name.CompareTo(o2.name);
-    }
 }

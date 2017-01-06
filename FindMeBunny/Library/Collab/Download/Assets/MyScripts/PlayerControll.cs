@@ -6,7 +6,7 @@ using System.Collections;
 public class PlayerControll : NetworkBehaviour
 {
     [SyncVar]
-    public bool isLooking;
+    public bool isLooking; 
     [SyncVar]
     private float counter;
     public Text DisplayText;
@@ -15,7 +15,7 @@ public class PlayerControll : NetworkBehaviour
     public GameObject Flashlight;
     [SyncVar]
     private float SleepOff = 5f;
-    private bool Called = false;
+    
 
 
     void Start()
@@ -39,23 +39,6 @@ public class PlayerControll : NetworkBehaviour
         DisplayCounter();
     }
     
-    void DisplayCounter()
-    {
-        if (counter > 0)
-        {
-            DisplayText.text = "time to hide: " + counter.ToString();
-        }
-        else DisplayText.enabled = false;
-
-        if (GameController.AllPlayersWereCatched() && counter < 0)
-        {
-            DisplayText.enabled = true;
-            DisplayText.text = "All players were catched";
-
-            //Initialize
-            CmdReturnToLobby();
-        }
-    }
      
     void Movement() {
         if (!isLocalPlayer)
@@ -88,25 +71,23 @@ public class PlayerControll : NetworkBehaviour
         }
     }
 
-    //[ClientRpc]
-    [Command]
-    void CmdReturnToLobby()
+    void DisplayCounter()
     {
-        if (Called == false)
+        if (counter > 0)
         {
-            if (SleepOff < 0)
-            {
-                GameController.counter = 10;
-                GameController.SwitchOffLight = false;
-                GameObject.FindGameObjectWithTag("Lobby").GetComponent<Prototype.NetworkLobby.LobbyManager>().SendReturnToLobby();
-                Called = true;
-            }
-            else
-            {
-                DisplayText.text = "Returning in: " + SleepOff;
-                SleepOff -= Time.deltaTime;
-            }
-            
+            DisplayText.enabled = true;
+            DisplayText.text = "time to hide: " + counter.ToString();
+        }
+        else DisplayText.enabled = false;
+
+        if (GameController.AllPlayersWereCatched() && counter < 0)
+        {
+            DisplayText.enabled = true;
+            DisplayText.text = "All players were catched";
+
+            //Initialize
+
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>().RpcReturnToLobby();
         }
     }
 }

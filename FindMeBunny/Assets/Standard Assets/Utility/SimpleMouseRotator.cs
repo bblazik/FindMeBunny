@@ -1,10 +1,11 @@
 using System;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
+using UnityEngine.Networking;
 
 namespace UnityStandardAssets.Utility
 {
-    public class SimpleMouseRotator : MonoBehaviour
+    public class SimpleMouseRotator : NetworkBehaviour
     {
         // A mouselook behaviour with constraints which operate relative to
         // this gameobject's initial rotation.
@@ -37,6 +38,8 @@ namespace UnityStandardAssets.Utility
 
         private void Update()
         {
+            if (!isLocalPlayer) return;
+
             // we make initial calculations from the original local rotation
             transform.localRotation = m_OriginalRotation;
 

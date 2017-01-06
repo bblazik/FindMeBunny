@@ -1,7 +1,7 @@
 sceneSetups:
-- path: Assets/MyScenes/Demo.unity
+- path: Assets/MyScenes/Second scene.unity
   isLoaded: 1
   isActive: 1
-- path: Assets/MyScenes/Second scene.unity
+- path: Assets/MyScenes/Demo.unity
   isLoaded: 1
   isActive: 0
